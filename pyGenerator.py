@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import random
 import traceback
@@ -42,6 +43,10 @@ PROGRAMS_LIST = [
     {
         "name" : "Sierpinski triangle",
         "prompt": "Sierpinski triangle. draw with turtle. get input from user on depth of trinagle"
+    },
+    {
+        "name" : "valid parentheses",
+        "prompt": "for a string input, check if it has valid parentheses. implement it in linear time complexity"
     }
 ]
 
@@ -190,6 +195,18 @@ def run_and_test_code(file_name):
             + short_traceback,
         }, short_traceback
 
+def open_file(file_path):
+    if sys.platform.startswith('win'):
+    # Windows
+        os.startfile(file_path)
+    elif sys.platform.startswith('darwin'):
+        # macOS
+        subprocess.call(['open', file_path])
+    elif sys.platform.startswith('linux'):
+        # Linux
+        subprocess.call(['xdg-open', file_path])
+    else:
+        print("Unsupported OS")
 
 def main():
     user_input = get_user_input()
@@ -197,7 +214,7 @@ def main():
     messages = get_initial_messages(user_input)
 
     for i in range(5):
-
+         
         print_iteration_number(i+1)
 
         if i > 0:  ## not the first iteration
@@ -227,7 +244,7 @@ def main():
             auto_format(file_name)
             print_stage(color.Fore.YELLOW, "Running Generated Code")
             print(color.Fore.WHITE)
-            subprocess.run(f"python {file_name}")
+            open_file(file_path=file_name)
             break
         else:
             print(
@@ -235,7 +252,7 @@ def main():
                 + f"excaption Error running generated code! Error:{traceback}"
             )
             messages.extend([code_generated_message, response])
-
+    
     if not test_result:
         print_stage(color.Fore.RED, "Code generation FAILED", "*")
 
